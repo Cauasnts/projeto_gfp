@@ -1,10 +1,11 @@
-const Subcategoria = require('../models/Subcategoria');
+import { BD } from '../db.js';
 
-const RotasSubcategorias = {
-  async novaSubcategoria(req, res) {
+
+class RotasSubcategorias {
+  async nova(req, res) {
     try {
       const { nome, id_categoria, gasto_fixo, ativo } = req.body;
-      const id_usuario = req.usuario.id;
+      const id_usuario = req.usuario.id; // Certifique que esse middleware está setando req.usuario
 
       const nova = await Subcategoria.create({
         nome,
@@ -16,29 +17,32 @@ const RotasSubcategorias = {
 
       res.status(201).json(nova);
     } catch (error) {
+      console.error("Erro ao criar subcategoria:", error);
       res.status(500).json({ erro: 'Erro ao criar subcategoria.' });
     }
-  },
+  }
 
-  async listarSubcategorias(req, res) {
+  async listar(req, res) {
     try {
       const { id_usuario } = req.params;
-      const subcategorias = await Subcategoria.findAll({
+
+      const subcategorias = await subcategorias.findAll({
         where: { id_usuario },
       });
 
       res.json(subcategorias);
     } catch (error) {
+      console.error("Erro ao listar subcategorias:", error);
       res.status(500).json({ erro: 'Erro ao listar subcategorias.' });
     }
-  },
+  }
 
-  async editarSubcategoria(req, res) {
+  async editar(req, res) {
     try {
       const { id } = req.params;
       const { nome, id_categoria, gasto_fixo, ativo } = req.body;
 
-      const subcategoria = await Subcategoria.findOne({
+      const subcategoria = await subcategoria.findOne({
         where: { id_subcategoria: id },
       });
 
@@ -55,15 +59,16 @@ const RotasSubcategorias = {
 
       res.json(subcategoria);
     } catch (error) {
+      console.error("Erro ao editar subcategoria:", error);
       res.status(500).json({ erro: 'Erro ao editar subcategoria.' });
     }
-  },
+  }
 
-  async deletarSubcategoria(req, res) {
+  async deletar(req, res) {
     try {
       const { id } = req.params;
 
-      const subcategoria = await Subcategoria.findOne({
+      const subcategoria = await subcategoria.findOne({
         where: { id_subcategoria: id },
       });
 
@@ -74,9 +79,10 @@ const RotasSubcategorias = {
       await subcategoria.destroy();
       res.json({ mensagem: 'Subcategoria deletada com sucesso.' });
     } catch (error) {
+      console.error("Erro ao deletar subcategoria:", error);
       res.status(500).json({ erro: 'Erro ao deletar subcategoria.' });
     }
-  },
-};
+  }
+}
 
 export default RotasSubcategorias;
