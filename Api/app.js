@@ -51,9 +51,9 @@ app.post("/categorias", autenticarToken, RotasCategorias.Nova);
 app.get("/categorias", autenticarToken, RotasCategorias.listarCategorias);
 app.get("/categorias/:id_categoria", autenticarToken, RotasCategorias.listarCategoriaPorID);
 app.put("/categorias/:id_categoria", autenticarToken, RotasCategorias.atualizarCategorias);
-// app.put("/categorias/:id_categoria", autenticarToken, RotasCategorias.atualizarTodasCategorias);
 app.delete("/categorias/:id_categoria", autenticarToken, RotasCategorias.deletarCategoria);
 app.get("/categorias/filtro", autenticarToken, RotasCategorias.filtrarCategorias);
+
 // Rotas Contas 
 app.post("/contas", autenticarToken, RotasContas.novaConta);
 app.get("/contas", autenticarToken, RotasContas.listarContas);

@@ -1,82 +1,92 @@
 import { BD } from '../db.js';
 
-
 class RotasSubcategorias {
-  async nova(req, res) {
+
+  static async nova(req, res) {
     try {
       const { nome, id_categoria, gasto_fixo, ativo } = req.body;
-      const id_usuario = req.usuario.id; // Certifique que esse middleware está setando req.usuario
+      const id_usuario = req.usuario.id;
 
-      const nova = await Subcategoria.create({
-        nome,
-        id_categoria,
-        gasto_fixo,
-        ativo,
-        id_usuario,
-      });
+      const sql = `
+        INSERT INTO subcategorias (nome, id_categoria, gasto_fixo, ativo, id_usuario)
+        VALUES ($1, $2, $3, $4, $5)
+        RETURNING *
+      `;
+      const params = [nome, id_categoria, gasto_fixo, ativo, id_usuario];
+      const resultado = await BD.query(sql, params);
 
-      res.status(201).json(nova);
+      res.status(201).json(resultado.rows[0]);
     } catch (error) {
       console.error("Erro ao criar subcategoria:", error);
       res.status(500).json({ erro: 'Erro ao criar subcategoria.' });
     }
   }
 
-  async listar(req, res) {
+  static async listar(req, res) {
     try {
       const { id_usuario } = req.params;
 
-      const subcategorias = await subcategorias.findAll({
-        where: { id_usuario },
-      });
+      const sql = `SELECT * FROM subcategorias WHERE id_usuario = $1`;
+      const resultado = await BD.query(sql, [id_usuario]);
 
-      res.json(subcategorias);
+      res.json(resultado.rows);
     } catch (error) {
       console.error("Erro ao listar subcategorias:", error);
       res.status(500).json({ erro: 'Erro ao listar subcategorias.' });
     }
   }
 
-  async editar(req, res) {
+  static async editar(req, res) {
     try {
       const { id } = req.params;
       const { nome, id_categoria, gasto_fixo, ativo } = req.body;
 
-      const subcategoria = await subcategoria.findOne({
-        where: { id_subcategoria: id },
-      });
+      // Verifica se existe
+      const consulta = await BD.query(
+        `SELECT * FROM subcategorias WHERE id_subcategoria = $1`,
+        [id]
+      );
 
-      if (!subcategoria) {
+      if (consulta.rows.length === 0) {
         return res.status(404).json({ erro: 'Subcategoria não encontrada.' });
       }
 
-      await subcategoria.update({
-        nome,
-        id_categoria,
-        gasto_fixo,
-        ativo,
-      });
+      // Atualiza
+      await BD.query(
+        `UPDATE subcategorias SET nome = $1, id_categoria = $2, gasto_fixo = $3, ativo = $4 WHERE id_subcategoria = $5`,
+        [nome, id_categoria, gasto_fixo, ativo, id]
+      );
 
-      res.json(subcategoria);
+      // Retorna atualizado
+      const atualizado = await BD.query(
+        `SELECT * FROM subcategorias WHERE id_subcategoria = $1`,
+        [id]
+      );
+      res.json(atualizado.rows[0]);
     } catch (error) {
       console.error("Erro ao editar subcategoria:", error);
       res.status(500).json({ erro: 'Erro ao editar subcategoria.' });
     }
   }
 
-  async deletar(req, res) {
+  static async deletar(req, res) {
     try {
       const { id } = req.params;
 
-      const subcategoria = await subcategoria.findOne({
-        where: { id_subcategoria: id },
-      });
+      const consulta = await BD.query(
+        `SELECT * FROM subcategorias WHERE id_subcategoria = $1`,
+        [id]
+      );
 
-      if (!subcategoria) {
+      if (consulta.rows.length === 0) {
         return res.status(404).json({ erro: 'Subcategoria não encontrada.' });
       }
 
-      await subcategoria.destroy();
+      await BD.query(
+        `DELETE FROM subcategorias WHERE id_subcategoria = $1`,
+        [id]
+      );
+
       res.json({ mensagem: 'Subcategoria deletada com sucesso.' });
     } catch (error) {
       console.error("Erro ao deletar subcategoria:", error);
