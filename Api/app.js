@@ -6,6 +6,8 @@ import RotasCategorias from './Routes/RotasCategorias.js';
 import RotasTransacoes from './Routes/RotasTransacoes.js';
 import RotasContas from './Routes/RotasContas.js';
 import RotasSubcategorias from './Routes/RotasSubcategorias.js';
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from './swagger.js';
 
 const app = express();
 const autenticarToken = RotasUsuarios.autenticarToken;
@@ -15,10 +17,16 @@ const Usuarios = RotasUsuarios.default;
 app.use(cors());
 app.use(express.json());
 
-// Rota de teste
-app.get("/", (req, res) => {
-  res.send("🚀 API de Usuários rodando!");
-});
+// // Rota de teste
+// app.get("/", (req, res) => {
+//   res.send("🚀 API de Usuários rodando!");
+// });
+
+app.use ('/', swaggerUi.serve, swaggerUi.setup(swaggerSpec)); 
+app.get ('/', (req, res) => {
+  res.redirect('/api-docs');
+}
+);
 
 // Rotas públicas - Usuários
 app.post("/usuarios", Usuarios.novoUsuario);
@@ -45,15 +53,14 @@ app.put("/transacoes/:id_transacao", autenticarToken, RotasTransacoes.atualizar)
 // app.put("/transacoes/:id_transacao", autenticarToken, RotasTransacoes.atualizarTodos);
 app.delete("/transacoes/:id_transacao", autenticarToken, RotasTransacoes.deletar);
 app.get("/transacoes/somarTransacao", autenticarToken, RotasTransacoes.somarTransacoes);
+// Rotas Categorias
+app.post("/categorias", autenticarToken, RotasCategorias.nova);
+app.get("/categorias", autenticarToken, RotasCategorias.listarTodas);
+app.get("/categorias/:id_categoria", autenticarToken, RotasCategorias.ListarporID);
+app.put("/categorias/:id_categoria", autenticarToken, RotasCategorias.atualizarTodosCampos);
+app.delete("/categorias/:id_categoria", autenticarToken, RotasCategorias.Deletar);
 
-//Rotas Categorias
-app.post("/categorias", autenticarToken, RotasCategorias.Nova);
-app.get("/categorias", autenticarToken, RotasCategorias.listarCategorias);
-app.get("/categorias/:id_categoria", autenticarToken, RotasCategorias.listarCategoriaPorID);
-app.put("/categorias/:id_categoria", autenticarToken, RotasCategorias.atualizarCategorias);
-app.delete("/categorias/:id_categoria", autenticarToken, RotasCategorias.deletarCategoria);
-app.get("/categorias/filtro", autenticarToken, RotasCategorias.filtrarCategorias);
-
+// app.delete("/categorias/:id_categoria", autenticarToken, RotasCategorias.Deletar);
 // Rotas Contas 
 app.post("/contas", autenticarToken, RotasContas.novaConta);
 app.get("/contas", autenticarToken, RotasContas.listarContas);
