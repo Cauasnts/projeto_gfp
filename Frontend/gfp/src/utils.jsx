@@ -1,1 +1,0 @@
-export const enderecoServidor = 'http://LocalHostw:3000';
