@@ -2,13 +2,13 @@ import { BD } from "../db.js";
 
 class rotasContas {
 	static async novoConta(req, res) {
-		const { nome, tipo_conta, saldo, conta_padrao } = req.body;
+		const { nome, tipo_conta, saldo, ativo, conta_padrao } = req.body;
 		
 		try {
 			const contas = await BD.query(`
-                INSERT INTO contas (nome, tipo_conta, saldo, conta_padrao) 
-                    VALUES ($1, $2, $3, $4) RETURNING *`,
-				[nome, tipo_conta, saldo, conta_padrao]
+                INSERT INTO contas (nome, tipo_conta, saldo, ativo, conta_padrao) 
+                    VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+				[nome, tipo_conta, saldo, ativo, conta_padrao]
 			);
 
 			res.status(201).json("Conta Cadastrada");
@@ -20,7 +20,7 @@ class rotasContas {
 
 	static async listarContas(req, res) {
 		try {
-			const contas = await BD.query("SELECT * FROM contas where ativo = true");
+			const contas = await BD.query("SELECT * FROM contas where ativo = true ORDER BY nome");
 			res.status(200).json(contas.rows);
 		} catch (error) {
 			console.error("Erro ao listar locais:", error);

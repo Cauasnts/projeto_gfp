@@ -81,7 +81,8 @@ export default function Contas() {
                     <p className='text-sm text-gray-500'>{item.tipo_conta}</p>
                 </div>
                 <div className='flex items-center space-x-2'>
-                    <button className={Estilos.botaoAlterar}> <MdEdit className='h-6 w-6' /></button>
+              
+                    <button className={Estilos.botaoAlterar} onClick={() => navigate(`/cadcontas`, { state: {itemAlterar: item} } )} > <MdEdit className='h-6 w-6' /></button>
                     <button className={Estilos.botaoExcluir} onClick={() => botaoExcluir(item.id_conta)} > <MdDelete className='h-6 w-6' /></button>
                 </div>
 
@@ -91,12 +92,18 @@ export default function Contas() {
 
     return (
         <div>
-            <p className='text-3xl font-bold mb-6' >Contas</p>
+            <div>
+                   <p className='text-4xl font-bold mb-6 color black-60' >Contas</p>
+            </div>
+         
             <section className='bg-white p-4 rounded-lg shadow-md'>
                 <div className='flex justify-between items-center mb-4'>
                     <h3 className='text-xl font-bold text-gray-800'>Gerenciar Contas</h3>
-                    <button onClick={() => navigate('/cadcontas')} className={Estilos.botaoCadastro}>
-                        <MdAdd className='h-8 w-8' /> Nova Conta
+                    <button
+                        className={`border p-1 rounded-xl ${Estilos.botaoCadastro}`}
+                        onClick={() => navigate('/cadcontas')}
+                    >
+                        <MdAdd className='h-8 w-8 border-2 rounded-full ' /> Nova Conta
                     </button>
                 </div>
 

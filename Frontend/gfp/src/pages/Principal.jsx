@@ -22,6 +22,8 @@ import {
 } from "react-icons/md";
 import styles from "../styles/Estilos.jsx";
 import Contas from "./Contas.jsx";
+import CadContas from "./CadContas.jsx";
+import Categorias from "./Categorias.jsx";
 
 export default function Principal() {
   const { dadosUsuario, setDadosUsuario, carregando } =
@@ -136,6 +138,8 @@ export default function Principal() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/contas" element={<Contas/>}/>
+            <Route path="/CadContas" element={<CadContas/>}/>
+            <Route path="/categorias" element={<Categorias/>}/>
           </Routes>
         </main>
       </section>
