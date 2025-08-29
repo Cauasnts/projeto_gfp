@@ -4,16 +4,6 @@ export default function Dashboard() {
   return (
     <div className="flex h-screen bg-gray-100">
       
-      {/* Sidebar */}
-      <aside className="w-64 bg-gray-800 text-white p-6 mt-4">
-        <h1 className="text-2xl font-bold mb-8">Meu Dashboard</h1>
-        <nav className="flex flex-col gap-4">
-          <a href="#" className="hover:bg-gray-700 rounded p-2">Início</a>
-          <a href="#" className="hover:bg-gray-700 rounded p-2">Usuários</a>
-          <a href="#" className="hover:bg-gray-700 rounded p-2">Relatórios</a>
-          <a href="#" className="hover:bg-gray-700 rounded p-2">Configurações</a>
-        </nav>
-      </aside>
 
       {/* Conteúdo principal */}
       <main className="flex-1 p-8">

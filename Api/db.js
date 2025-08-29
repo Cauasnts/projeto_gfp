@@ -14,7 +14,7 @@ dotenv.config()
 const BD = new Pool({
     user: 'postgres',
     host: 'localhost',
-    database: 'db_gfp',
+    database: 'fisiopro',
     password: 'admin',
     port: 5432,
 })

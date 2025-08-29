@@ -4,7 +4,6 @@ import { MdPerson, MdClose, MdSave } from "react-icons/md";
 import { useLocation, useNavigate } from "react-router-dom";
 import Estilos from "../styles/Estilos";
 import { enderecoServidor } from "../utils";
-import Fisioterapeutas from "./Fisioterapeutas";
 
 export default function CadFisioterapeutas() {
   const { dadosUsuario } = useContext(UsuarioContext);
@@ -28,7 +27,12 @@ export default function CadFisioterapeutas() {
   }, [itemAlterar]);
 
   const botaoSalvar = async () => {
-    if (nome.trim() === "" || cpf.trim() === "" || especialidade.trim() === "" || registro.trim() === "") {
+    if (
+      nome.trim() === "" ||
+      cpf.trim() === "" ||
+      especialidade.trim() === "" ||
+      registro.trim() === ""
+    ) {
       alert("Preencha todos os campos!");
       return;
     }
@@ -64,7 +68,10 @@ export default function CadFisioterapeutas() {
         navigate("/fisioterapeutas");
       } else {
         const erro = await resposta.json();
-        alert("Erro ao salvar fisioterapeuta: " + (erro.mensagem || "Tente novamente."));
+        alert(
+          "Erro ao salvar fisioterapeuta: " +
+            (erro.mensagem || "Tente novamente.")
+        );
       }
     } catch (error) {
       alert("Erro ao salvar fisioterapeuta: " + error.message);
@@ -73,9 +80,12 @@ export default function CadFisioterapeutas() {
   };
 
   return (
-    <div className="flex justify-center py-6 px-4">
-      <section className="w-full max-w-lg bg-white-500 p-8 rounded-lg shadow-lg text-white">
-        <header className="flex items-center gap-2 mb-5 border-b border-gray-500 pb-4">
+    <div
+      className="flex justify-center items-center py-6 px-4 min-h-screen bg-cover bg-center"
+      style={{ backgroundImage: "" }}
+    >
+      <section className="w-full max-w-lg bg-white/90 p-8 rounded-lg shadow-lg">
+        <header className="flex items-center gap-2 mb-5 border-b border-gray-300 pb-4">
           <MdPerson className="text-cyan-600 h-8 w-8" />
           <h2 className="text-2xl font-bold text-gray-700">
             {itemAlterar ? "Alterar Fisioterapeuta" : "Novo Fisioterapeuta"}

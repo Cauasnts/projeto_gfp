@@ -9,21 +9,15 @@ import {
 } from "react-router-dom";
 import Dashboard from "./Dashboard.jsx";
 import {
-  MdAdd,
-  MdCached,
   MdClose,
   MdGridView,
   MdLogout,
   MdPeople,
-  MdOutlineLocalOffer,
-  MdCreditCard,
   MdMenu,
   MdViewAgenda,
-  MdCandlestickChart,
 } from "react-icons/md";
-import styles from "../styles/Estilos.jsx";
 import Agendas from "./Agendas.jsx";
-import CadAgendas from "./CadAgenda.jsx"; 
+import CadAgendas from "./CadAgenda.jsx";
 import CadFisioterapeutas from "./CadFisioterapeutas.jsx";
 import Fisioterapeutas from "./Fisioterapeutas.jsx";
 
@@ -67,15 +61,17 @@ export default function Principal() {
           menuAberto ? "translate-x-0" : "-translate-x-full"
         }`}
       >
+        {/* Topo */}
         <div className="flex justify-between items-center mb-6 p-4 border-b border-gray-900">
           <div className="flex gap-2 items-center">
-             <span className="text-xl font-bold md:hidden lg:block" >FisiON</span>
+            <span className="text-xl font-bold md:hidden lg:block">FisiON</span>
           </div>
           <button className="md:hidden" onClick={() => setMenuAberto(false)}>
             <MdClose className="w-6 h-6" />
           </button>
         </div>
 
+        {/* Menu */}
         <nav className="flex-1">
           {[
             { to: "/dashboard", icon: MdGridView, label: " Dashboard" },
@@ -97,27 +93,25 @@ export default function Principal() {
               </Link>
             </div>
           ))}
-
-          {/* Info do usuário e logout */}
-          <div className="border-t border-slate-700 pt-4">
-            <div className="flex items-center p-2">
-              <MdPeople className="w-8 h-8 p-2 bg-slate-700 text-cyan-400 rounded-full" />
-              <div className="ml-3 md:hidden lg:block">
-                <p className="text-sm font-bold text-white">
-                  {dadosUsuario?.nome}
-                </p>
-                <p className="text-xs text-gray-400">{dadosUsuario?.email}</p>
-              </div>
-            </div>
-            <button
-              className="flex items-center gap-2 p-3 w-full text-slate-300 justify-center"
-              onClick={botaoLogout}
-            >
-              <MdLogout className="w-8 h-8 p-2 bg-slate-700 text-red-400 rounded-full" />
-              <span className="text-red-400 md:hidden lg:block">Sair</span>
-            </button>
-          </div>
         </nav>
+
+        {/* Rodapé - Usuário */}
+        <div className="bg-slate-900 p-4 shadow-inner">
+          <div className="flex items-center">
+            <MdPeople className="w-8 h-8 p-2 bg-slate-700 text-cyan-400 rounded-full" />
+            <div className="ml-3 md:hidden lg:block">
+              <p className="text-sm font-bold text-white">{dadosUsuario?.nome}</p>
+              <p className="text-xs text-gray-400">{dadosUsuario?.email}</p>
+            </div>
+          </div>
+          <button
+            className="flex items-center gap-2 p-3 w-full text-slate-300 justify-center mt-2 hover:bg-slate-800 rounded-lg"
+            onClick={botaoLogout}
+          >
+            <MdLogout className="w-8 h-8 p-2 bg-slate-700 text-red-400 rounded-full" />
+            <span className="text-red-400 md:hidden lg:block">Sair</span>
+          </button>
+        </div>
       </section>
 
       {/* Conteúdo principal */}

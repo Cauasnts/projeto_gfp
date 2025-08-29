@@ -10,7 +10,7 @@ export default function CadAgenda() {
   const { dadosUsuario } = useContext(UsuarioContext);
   const navigate = useNavigate();
   const location = useLocation();
-  const agendaAlterar = location.state?.pacienteAlterar; // já que usamos 'pacienteAlterar' na listagem
+  const agendaAlterar = location.state?.pacienteAlterar;
 
   const [nomeUsuario, setNomeUsuario] = useState(agendaAlterar?.nome_usuario || '');
   const [patologia, setPatologia] = useState(agendaAlterar?.patologia || '');
@@ -44,8 +44,8 @@ export default function CadAgenda() {
           patologia,
           data_de_nascimento: dataNascimento,
           quantidade_de_secao: quantidadeSecao,
-          id_usuario: dadosUsuario.id, // supondo que o usuário logado seja o criador
-          id_fisioterapeuta: dadosUsuario.id // ou outro campo, dependendo do seu fluxo
+          id_usuario: dadosUsuario.id, 
+          id_fisioterapeuta: dadosUsuario.id
         })
       });
 
