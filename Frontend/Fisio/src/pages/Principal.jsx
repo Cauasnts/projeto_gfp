@@ -8,7 +8,6 @@ import {
   useLocation,
 } from "react-router-dom";
 import Dashboard from "./Dashboard.jsx";
-import logo from "../assets/logo2.png";
 import {
   MdAdd,
   MdCached,
@@ -19,11 +18,14 @@ import {
   MdOutlineLocalOffer,
   MdCreditCard,
   MdMenu,
+  MdViewAgenda,
+  MdCandlestickChart,
 } from "react-icons/md";
 import styles from "../styles/Estilos.jsx";
-import Contas from "./Contas.jsx";
-import CadContas from "./CadContas.jsx";
-import Categorias from "./Categorias.jsx";
+import Agendas from "./Agendas.jsx";
+import CadAgendas from "./CadAgenda.jsx"; 
+import CadFisioterapeutas from "./CadFisioterapeutas.jsx";
+import Fisioterapeutas from "./Fisioterapeutas.jsx";
 
 export default function Principal() {
   const { dadosUsuario, setDadosUsuario, carregando } =
@@ -61,14 +63,13 @@ export default function Principal() {
 
       {/* Sidebar */}
       <section
-        className={`fixed top-0 left-0 h-full w-64 bg-slate-900 text-gray-200 flex flex-col z-40 transform transition-transform md:relative md:w-20 lg:w-64 md:translate-x-0 ${
+        className={`fixed top-0 left-0 h-full w-64 bg-gradient-to-b from-[#09f59b66] to-[#43ffefa2] text-gray-100 flex flex-col z-40 transform transition-transform md:relative md:w-20 lg:w-64 md:translate-x-0 ${
           menuAberto ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="flex justify-between items-center mb-6 p-4 border-b border-gray-700">
+        <div className="flex justify-between items-center mb-6 p-4 border-b border-gray-900">
           <div className="flex gap-2 items-center">
-            <img src={logo} alt="Logo-GFP" className="w-8 h-8" />
-            <span className="text-xl font-bold md:hidden lg:block">GFP</span>
+             <span className="text-xl font-bold md:hidden lg:block" >FisiON</span>
           </div>
           <button className="md:hidden" onClick={() => setMenuAberto(false)}>
             <MdClose className="w-6 h-6" />
@@ -77,11 +78,9 @@ export default function Principal() {
 
         <nav className="flex-1">
           {[
-            { to: "/dashboard", icon: MdGridView, label: "Dashboard" },
-            { to: "/transacoes", icon: MdCached, label: "Transações" },
-            { to: "/contas", icon: MdCreditCard, label: "Contas" },
-            { to: "/categorias", icon: MdOutlineLocalOffer, label: "Categorias" },
-            { to: "/novaTransacao", icon: MdAdd, label: "Nova Transação" },
+            { to: "/dashboard", icon: MdGridView, label: " Dashboard" },
+            { to: "/agendas", icon: MdViewAgenda, label: " Agendas" },
+            { to: "/fisioterapeutas", icon: MdPeople, label: " Fisioterapeutas" },
           ].map(({ to, icon: Icon, label }) => (
             <div key={to} className="px-4 lg:px-6 mb-2">
               <Link
@@ -128,8 +127,7 @@ export default function Principal() {
             <MdMenu className="w-8 h-8" />
           </button>
           <div className="flex items-center justify-center flex-1 gap-2 md:hidden">
-            <img src={logo} alt="logo gfp" className="w-8 h-8" />
-            <span className="font-bold">GFP</span>
+            <span className="font-bold">FisiOn</span>
           </div>
         </header>
 
@@ -137,9 +135,13 @@ export default function Principal() {
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/contas" element={<Contas/>}/>
-            <Route path="/CadContas" element={<CadContas/>}/>
-            <Route path="/categorias" element={<Categorias/>}/>
+
+            {/* ✅ Agendas e Cadastro de Agendas separados */}
+            <Route path="/agendas" element={<Agendas />} />
+            <Route path="/agendas/cadastrar" element={<CadAgendas />} />
+
+            <Route path="/cadfisioterapeutas" element={<CadFisioterapeutas />} />
+            <Route path="/fisioterapeutas" element={<Fisioterapeutas />} />
           </Routes>
         </main>
       </section>

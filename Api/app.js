@@ -2,11 +2,9 @@ import express from "express";
 import { testarConexao } from "./db.js";
 import cors from "cors";
 
-import rotasUsuarios, {autenticarToken} from "./routes/rotasUsuarios.js";
-import rotasCategorias from "./routes/rotasCategorias.js";
-import rotasSubCategorias from "./routes/rotasSubCategorias.js";
-import rotasContas from "./routes/rotasContas.js";
-import rotasTransacao from "./routes/rotasTransacoes.js";
+import rotasAgenda from "./Routes/RotasAgendas.js"
+import rotasFisioterapeuta from "./Routes/RotasFisioterapeutas.js"
+import rotasPacientes from "./Routes/RotasPacientes.js"
 
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './swagger.js';
@@ -26,49 +24,22 @@ app.get("/", (req, res) => {
     res.redirect('/api-docs');
 });
 
-// Rotas de Usuários {autenticarToken}
-app.get("/usuarios",  rotasUsuarios.listarUsuarios);
-app.post("/usuarios", rotasUsuarios.novoUsuario);
-app.post('/usuarios/login', rotasUsuarios.login);
-app.delete('/usuarios/:id', autenticarToken, rotasUsuarios.deletarUsuario);
-app.patch('/usuarios/:id', autenticarToken, rotasUsuarios.atualizar);
-app.put('/usuarios/:id', autenticarToken, rotasUsuarios.atualizarTodosCampos);
-app.get('/usuarios/:id', autenticarToken, rotasUsuarios.consultaPorId);
 
-
-// Rotas de categorias {autenticarToken}
-app.get("/categorias", autenticarToken, rotasCategorias.listarCategorias);
-app.get("/categorias/filtrarCategoria/:tipo_transacao", autenticarToken, rotasCategorias.filtrarCategorias);
-app.post("/categorias", autenticarToken, rotasCategorias.novaCategoria);
-app.delete('/categorias/:id', autenticarToken, rotasCategorias.deletarCategoria);
-app.get('/categorias/:id',  autenticarToken, rotasCategorias.consultaPorId);
-app.put('/categorias/:id', autenticarToken, rotasCategorias.atualizarTodosCampos);
-app.patch('/categorias/:id', autenticarToken, rotasCategorias.atualizar);
-
-// Rotas de subcategorias {autenticarToken}
-app.get('/subcategorias', autenticarToken, rotasSubCategorias.listarSubCategorias);
-app.post('/subcategorias', autenticarToken, rotasSubCategorias.novaSubCategoria);
-app.delete('/subcategorias/:id', autenticarToken, rotasSubCategorias.deletarSubCategoria);
-app.get('/subcategorias/:id', autenticarToken, rotasSubCategorias.consultaPorId);
-app.put('/subcategorias/:id', autenticarToken, rotasSubCategorias.atualizarTodosCampos);
-app.patch('/subcategorias/:id', autenticarToken, rotasSubCategorias.atualizar);
-
-// Rotas de contas {autenticarToken}
-app.get('/contas', autenticarToken,  rotasContas.listarContas);
-app.post('/contas', autenticarToken, rotasContas.novoConta);
-app.delete('/contas/:id', autenticarToken, rotasContas.deletarContas);
-app.get('/contas/:id', autenticarToken, rotasContas.consultaPorId);
-app.put('/contas/:id', autenticarToken, rotasContas.atualizarTodosCampos);
-app.patch('/contas/:id', autenticarToken, rotasContas.atualizar);
-
-// Rotas de transação {autenticarToken}
-app.get('/transacao', autenticarToken, rotasTransacao.listarTransacao);
-app.post('/transacao', autenticarToken, rotasTransacao.novaTransacao);
-app.delete('/transacao/:id', autenticarToken, rotasTransacao.deletarTransacao);
-app.get('/transacao/:id', autenticarToken, rotasTransacao.consultaPorId);
-app.put('/transacao/:id', autenticarToken, rotasTransacao.atualizarTodosCampos);
-app.patch('/transacao/:id', autenticarToken, rotasTransacao.atualizar);
-
+// ================= ROTAS PACIENTES =================
+app.get('/pacientes', rotasPacientes.listarPacientes);
+app.post('/pacientes', rotasPacientes.novoPacientes);
+app.delete('/pacientes/:id', rotasPacientes.deletarPacientes);
+app.put('/pacientes/:id', rotasPacientes.atualizarPacientes);
+// ================= ROTAS AGENDA =================
+app.get('/agendas', rotasAgenda.listarAgenda);
+app.post('/agendas', rotasAgenda.novaAgenda);
+app.delete('/agendas', rotasAgenda.deletarAgenda);
+app.put('/agendas', rotasAgenda.atualizarAgenda);
+// ================= ROTAS FISIOTERAPEUTA =================
+app.get('/fisioterapeutas', rotasFisioterapeuta.novoFisioterapeuta);
+app.post('/fisioterapeutas', rotasFisioterapeuta.listarFisioterapeutas);
+app.delete('/fisioterapeutas/:id', rotasFisioterapeuta. deletarFisioterapeuta);
+app.put('/fisioterapeutas/:id', rotasFisioterapeuta.atualizarFisioterapeuta);
 const porta = 3000;
 app.listen(porta, () => {
     console.log(`Api rodando em http://localhost:${porta}`);

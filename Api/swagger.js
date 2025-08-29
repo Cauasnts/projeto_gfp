@@ -1,869 +1,665 @@
-import { response } from "express";
-import SwaggerJSDoc from "swagger-jsdoc";
+import swaggerJSDoc from "swagger-jsdoc";
 
 const swaggerDefinition = {
-  openapi: "3.0.4",
+  openapi: "3.0.0",
   info: {
-    title: "API do Gestor Financeiro Pessoal",
+    title: "API do site de fisioterapia",
     version: "1.0.0",
-    description: `API para gerenciamento financeiro pessoal desenvolvida no curso Técnico de Desenvolvimento de Sistemas do SENAI`,
+    description: "API documentation do site de fisioterapia",
   },
   servers: [
-    {
+     {
       url: "http://localhost:3000/",
-      description: "Servidor Local",
-    },
-    {
-      url: "http://192.168.0.237:3000",
-      description: "Servidor de API do Douglas",
-    },
+
+     }
   ],
   tags: [
     {
-      name: "Usuarios",
-      description:
-        "Rotas para cadastro, login, atualização e desativação de usuários",
+      name: "Agenda",
+      description: "Endpoints relacionados à agenda de atendimentos",
     },
+
     {
-      name: "Categorias",
-      description:
-        "Rotas para cadastro, leitura, atualização e desativação de categorias",
-    },
-    {
-      name: "Subcategorias",
-      description:
-        "Rotas para cadastro, leitura, atualização e desativação de subcategorias",
-    },
+      name: "Fisioterapeuta",
+      description: "Endpoints relacionados aos fisioterapeutas",
+    }
   ],
-  components: {
-    securitySchemes: {
-      bearerAuth: {
+  components:{
+    securitySchemes:{
+      BearerAuth: {
         type: "http",
         scheme: "bearer",
         bearerFormat: "JWT",
       },
     },
   },
-  paths: {
-    "/usuarios": {
-      post: {
-        tags: ["Usuarios"],
-        summary: "Cadastrar novo usuário",
-        description: "Método utilizado para cadastrar novos usuários",
-        requestBody: {
-          required: true,
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                required: ["nome", "email", "senha", "tipo_acesso"],
-                properties: {
-                  nome: { type: "string", example: "João Silva" },
-                  email: { type: "string", example: "joao@example.com" },
-                  senha: { type: "string", example: "123" },
-                  tipo_acesso: { type: "string", example: "adm" },
+paths: {
+  "/Paciente": {
+    "post": {
+      tags: ["Paciente"],
+      summary: "Criar um novo agendamento",
+      description: "Endpoint para criar um novo Usuario ",
+      requestBody:{
+        description: "Dados do usuário",
+        required: true,
+        content:{
+          "application/json":{
+            schema:{
+              type: "object",
+              required: ["nome_usuario","data_de_nascimento", "responsavel", "endereco", "telefone" ],
+              properties: {
+                nome_usuario: {
+                  type: "string",
+                  description: "Nome do paciente",
                 },
-              },
-            },
-          },
-        },
-        responses: {
-          200: {
-            description: "Usuário cadastrado com sucesso",
-          },
-          400: {
-            description: "Erro ao cadastrar usuário",
-          },
-          500: {
-            description: "Erro interno do servidor",
-          },
-        },
-      },
-      get: {
-        tags: ["Usuarios"],
-        summary: "Listar todos os usuários",
-        description:
-          "Método utilizado para listar todos os usuários cadastrados",
-        security: [
-          {
-            bearerAuth: [],
-          },
-        ],
-        responses: {
-          200: {
-            description: "Lista de usuários",
-            content: {
-              "application/json": {
-                schema: {
-                  type: "array",
-                  items: {
-                    type: "object",
-                    properties: {
-                      id_usuario: { type: "integer", example: 1 },
-                      nome: { type: "string", example: "João Silva" },
-                      email: { type: "string", example: "joao@example.com" },
-                      senha: { type: "string", example: "123" },
-                      tipo_acesso: { type: "string", example: "adm" },
-                      ativo: { type: "boolean", example: true },
-                    },
-                  },
+                data_de_nascimento: {
+                  type: "string",
+                  format: "date",
+                  description: "Data de nascimento do paciente",
                 },
-              },
-            },
-          },
-          500: {
-            description: "Erro interno do servidor",
-          },
-        },
-      },
-    },
-    "/usuarios/{id_usuario}": {
-      delete: {
-        tags: ["Usuarios"],
-        summary: "Desativar usuário",
-        description: "Método utilizado para desativar um usuário",
-        security: [
-          {
-            bearerAuth: [],
-          },
-        ],
-        parameters: [
-          {
-            name: "id_usuario",
-            in: "path",
-            required: true,
-            description: "ID do usuário a ser deletado",
-            schema: {
-              type: "integer",
-            },
-          },
-        ],
-        responses: {
-          200: {
-            description: "Usuário deletado com sucesso",
-          },
-          400: {
-            description: "Erro ao deletar usuário",
-          },
-          500: {
-            description: "Erro interno do servidor",
-          },
-        },
-      },
-      put: {
-        tags: ["Usuarios"],
-        summary: "Atualizar usuário",
-        description: "Método utilizado para atualizar os dados de um usuário",
-        security: [
-          {
-            bearerAuth: [],
-          },
-        ],
-        parameters: [
-          {
-            name: "id_usuario",
-            in: "path",
-            required: true,
-            description: "ID do usuário a ser atualizado",
-            schema: {
-              type: "integer",
-            },
-          },
-        ],
-        requestBody: {
-          required: true,
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                properties: {
-                  nome: { type: "string", example: "João Silva" },
-                  email: { type: "string", example: "joao@senai.br" },
-                  senha: { type: "string", example: "123" },
-                  tipo_acesso: { type: "string", example: "adm" },
+                responsavel: {
+                  type: "string",
+                  description: "Nome do responsável pelo paciente",
                 },
-              },
-            },
-          },
-        },
-        responses: {
-          200: {
-            description: "Usuário atualizado com sucesso",
-          },
-          400: {
-            description: "Erro ao atualizar usuário",
-          },
-          500: {
-            description: "Erro interno do servidor",
-          },
-        },
-      },
-      get: {
-        tags: ["Usuarios"],
-        summary: "Listar usuário por ID",
-        description: "Método utilizado para listar um usuário pelo ID",
-        security: [
-          {
-            bearerAuth: [],
-          },
-        ],
-        parameters: [
-          {
-            name: "id_usuario",
-            in: "path",
-            required: true,
-            description: "ID do usuário a ser listado",
-            schema: {
-              type: "integer",
-            },
-          },
-        ],
-        responses: {
-          200: {
-            description: "Usuário encontrado",
-            content: {
-              "application/json": {
-                schema: {
-                  type: "object",
-                  properties: {
-                    id_usuario: { type: "integer", example: 1 },
-                    nome: { type: "string", example: "João Silva" },
-                    email: { type: "string", example: "joao@senai.com" },
-                    senha: { type: "string", example: "123" },
-                  },
+                endereco: {
+                  type: "string",
+                  description: "Endereço do paciente",
                 },
-              },
-            },
-          },
-        },
-      },
-      patch: {
-        tags: ["Usuarios"],
-        summary: "Atualizar usuário",
-        description: "Método utilizado para atualizar os dados de um usuário",
-        security: [
-          {
-            bearerAuth: [],
-          },
-        ],
-        parameters: [
-          {
-            name: "id_usuario",
-            in: "path",
-            required: true,
-            description: "ID do usuário a ser atualizado",
-            schema: {
-              type: "integer",
-            },
-          },
-        ],
-        requestBody: {
-          required: true,
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                properties: {
-                  nome: { type: "string", example: "João Silva" },
-                  email: { type: "string", example: "joao@senai.br" },
-                  senha: { type: "string", example: "123" },
+                telefone: {
+                  type: "string",
+                  description: "Telefone de contato do paciente",
                 },
-              },
-            },
-          },
-        },
-        responses: {
-          200: {
-            description: "Usuário atualizado com sucesso",
-          },
-          400: {
-            description: "Erro ao atualizar usuário",
-          },
-          500: {
-            description: "Erro interno do servidor",
-          },
-        },
-      },
-    },
-    "/usuarios/login": {
-      post: {
-        tags: ["Usuarios"],
-        summary: "Login do usuário",
-        description:
-          "Método utilizado para efetuar o login do usuário e gerar o token",
-        requestBody: {
-          required: true,
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                required: ["email", "senha"],
-                properties: {
-                  email: { type: "string", example: "sesi@sesi.br" },
-                  senha: { type: "string", example: "123" },
-                },
-              },
-            },
-          },
-        },
-        responses: {
-          200: {
-            description: "Usuário encontrado",
-            content: {
-              "application/json": {
-                schema: {
-                  type: "array",
-                  items: {
-                    type: "object",
-                    properties: {
-                      token: {
-                        type: "string",
-                        example:
-                          "jkdnaskjdbaskjndlaksnmmlmcaj21lekn1lkn213n12jb3kj 21",
-                      },
-                      id_usuario: { type: "integer", example: 1 },
-                      nome: { type: "string", example: "João Silva" },
-                      email: { type: "string", example: "joao@example.com" },
-                      senha: { type: "string", example: "123" },
-                      tipo_acesso: { type: "string", example: "adm" },
-                    },
-                  },
-                },
-              },
-            },
-          },
-          400: {
-            description: "Erro ao encontrar usuário",
-          },
-          500: {
-            description: "Erro interno do servidor",
-          },
-        },
-      },
-    },
-    "/categorias": {
-      post: {
-        tags: ["Categorias"],
-        summary: "Nova Categoria",
-        description: "Rota para cadastrar nova categoria",
-        security: [
-          {
-            bearerAuth: [],
-          },
-        ],
-        requestBody: {
-          required: true,
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                required: [
-                  "nome",
-                  "tipo_transacao",
-                  "gasto_fixo",
-                  "id_usuario",
-                  "cor",
-                  "icone",
-                ],
-                properties: {
-                  nome: { type: "string", example: "Alimentação" },
-                  tipo_transacao: {
-                    type: "string",
-                    example: "ENTRADA OU SAIDA",
-                  },
-                  gasto_fixo: { type: "boolean", example: true },
-                  id_usuario: { type: "integer", example: 1 },
-                  cor: { type: "string", example: "#FF5733" },
-                  icone: { type: "string", example: "plus" },
-                },
-              },
-            },
-          },
-        },
-        responses: {
-          200: {
-            description: "Categoria cadastrada com sucesso",
-          },
-          400: {
-            description: "Erro ao cadastrar categoria",
-          },
-          500: {
-            description: "Erro interno do servidor",
-          },
-        },
-      },
-      get: {
-        tags: ["Categorias"],
-        summary: "Listar todas as categorias",
-        description: "Rota para listar todas as categorias cadastradas",
-        security: [
-          {
-            bearerAuth: [],
-          },
-        ],
-        responses: {
-          200: {
-            description: "Lista de categorias",
-            content: {
-              "application/json": {
-                schema: {
-                  type: "array",
-                  items: {
-                    type: "object",
-                    properties: {
-                      id_categoria: { type: "integer", example: 1 },
-                      nome: { type: "string", example: "Alimentação" },
-                      tipo_transacao: {
-                        type: "string",
-                        example: "ENTRADA OU SAIDA",
-                      },
-                      gasto_fixo: { type: "boolean", example: true },
-                      id_usuario: { type: "integer", example: 1 },
-                      cor: { type: "string", example: "#FF5733" },
-                      icone: { type: "string", example: "plus" },
-                    },
-                  },
-                },
-              },
-            },
-          },
-          200: {
-            description: "Categoria listada com sucesso",
-          },
-          400: {
-            description: "Erro ao listar categorias",
-          },
-          500: {
-            description: "Erro interno do servidor",
-          },
-        },
-      },
-    },
-    "/categorias/{id_categoria}": {
-      put: {
-        tags: ["Categorias"],
-        summary: "Atualizar categoria",
-        description: "Rota para atualizar uma categoria",
-        security: [
-          {
-            bearerAuth: [],
-          },
-        ],
-        parameters: [
-          {
-            name: "id_categoria",
-            in: "path",
-            required: true,
-            description: "ID da categoria a ser atualizada",
-            schema: {
-              type: "integer",
-            },
-          },
-        ],
-        requestBody: {
-          required: true,
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                properties: {
-                  nome: { type: "string", example: "Alimentação" },
-                  tipo_transacao: {
-                    type: "string",
-                    example: "ENTRADA OU SAIDA",
-                  },
-                  gasto_fixo: { type: "boolean", example: true },
-                  id_usuario: { type: "integer", example: 1 },
-                  cor: { type: "string", example: "#FF5733" },
-                  icone: { type: "string", example: "plus" },
-                },
-              },
-            },
-          },
-        },
-        responses: {
-          200: {
-            description: "Categoria atualizada com sucesso",
-          },
-          400: {
-            description: "Erro ao atualizar categoria",
-          },
-          500: {
-            description: "Erro interno do servidor",
-          },
-        },
-      },
-      patch: {
-        tags: ["Categorias"],
-        summary: "Atualizar categoria",
-        description: "Rota para atualizar uma categoria",
-        security: [
-          {
-            bearerAuth: [],
-          },
-        ],
-        parameters: [
-          {
-            name: "id_categoria",
-            in: "path",
-            required: true,
-            description: "ID da categoria a ser atualizada",
-            schema: {
-              type: "integer",
-            },
-          },
-        ],
-        requestBody: {
-          required: true,
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                properties: {
-                  nome: { type: "string", example: "Alimentação" },
-                  tipo_transacao: {
-                    type: "string",
-                    example: "ENTRADA OU SAIDA",
-                  },
-                  gasto_fixo: { type: "boolean", example: true },
-                  id_usuario: { type: "integer", example: 1 },
-                  cor: { type: "string", example: "#FF5733" },
-                  icone: { type: "string", example: "plus" },
-                },
-              },
-            },
-          },
-        },
-        responses: {
-          200: {
-            description: "Categoria atualizada com sucesso",
-          },
-          400: {
-            description: "Erro ao atualizar categoria",
-          },
-          500: {
-            description: "Erro interno do servidor",
-          },
-        },
-      },
-      delete: {
-        tags: ["Categorias"],
-        summary: "Deletar categoria",
-        description: "Rota para deletar uma categoria",
-        security: [
-          {
-            bearerAuth: [],
-          },
-        ],
-        parameters: [
-          {
-            name: "id_categoria",
-            in: "path",
-            required: true,
-            description: "ID da categoria a ser deletada",
-            schema: {
-              type: "integer",
-            },
-          },
-        ],
-        responses: {
-          200: {
-            description: "Categoria deletada com sucesso",
-          },
-          400: {
-            description: "Erro ao deletar categoria",
-          },
-          500: {
-            description: "Erro interno do servidor",
-          },
-        },
-      },
-      get: {
-        tags: ["Categorias"],
-        summary: "Listar categoria por ID",
-        description: "Rota para listar uma categoria pelo ID",
-        security: [
-          {
-            bearerAuth: [],
-          },
-        ],
-        parameters: [
-          {
-            name: "id_categoria",
-            in: "path",
-            required: true,
-            description: "ID da categoria a ser listada",
-            schema: {
-              type: "integer",
-            },
-          },
-        ],
-        responses: {
-          200: {
-            description: "Categoria encontrada",
-            content: {
-              "application/json": {
-                schema: {
-                  type: "object",
-                  properties: {
-                    id_categoria: { type: "integer", example: 1 },
-                    nome: { type: "string", example: "Alimentação" },
-                    tipo_transacao: {
-                      type: "string",
-                      example: "ENTRADA OU SAIDA",
-                    },
-                    gasto_fixo: { type: "boolean", example: true },
-                    id_usuario: { type: "integer", example: 1 },
-                    cor: { type: "string", example: "#FF5733" },
-                    icone: { type: "string", example: "plus" },
-                  },
-                },
-              },
-            },
-          },
-          400: {
-            description: "Erro ao listar categoria",
-          },
-          500: {
-            description: "Erro interno do servidor",
-          },
-        },
-      },
-      get: {
-        tags: ["Categorias"],
-        summary: "Filtrar categoria",
-        description: "Rota para filtrar categorias",
-        security: [
-          {
-            bearerAuth: [],
-          },
-        ],
-        parameters: [
-          {
-            name: "id_usuario",
-            in: "query",
-            required: true,
-            description: "ID do usuário para filtrar as categorias",
-            schema: {
-              type: "integer",
-            },
-          },
-        ],
-        responses: {
-          200: {
-            description: "Categorias filtradas com sucesso",
-          },
-          400: {
-            description: "Erro ao filtrar categorias",
-          },
-          500: {
-            description: "Erro interno do servidor",
-          },
-        },
-      },
-    },
-    "/subcategorias": {
-      post: {
-        tags: ["Subcategorias"],
-        summary: "Nova Subcategoria",
-        description: "Rota para cadastrar nova subcategoria",
-        security: [
-          {
-            bearerAuth: [],
-          },
-        ],
-        
-        requestBody: {
-          required: true,
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                required: [
-                  "nome",
-                  "id_categoria",
-                  "gasto_fixo",
-                  "cor",
-                  "icone",
-                ],
-                properties: {
-                  nome: { type: "string", example: "Alimentação" },
-                  id_categoria: { type: "integer", example: 1 },
-                  gasto_fixo: { type: "boolean", example: true },
-                  cor: { type: "string", example: "#FF5733" },
-                  icone: { type: "string", example: "plus" },
-                },
-              },
-            },
-          },
-        },
-        responses: {
-          200: {
-            description: "Subcategoria cadastrada com sucesso",
-          },
-          400: {
-            description: "Erro ao cadastrar subcategoria",
-          },
-          500: {
-            description: "Erro interno do servidor",
-          },
-        },
-      },
-      get: {
-        tags: ["Subcategorias"],
-        summary: "Listar Subcategorias",
-        description: "Rota para listar todas as subcategorias",
-        security: [
-          {
-            bearerAuth: [],
-          },
-        ],
+              }
 
-        responses: {
-          200: {
-            description: "Lista de categorias",
-            content: {
-              "application/json": {
-                schema: {
-                  type: "array",
-                  items: {
-                    type: "object",
-                    properties: {
-                      id_categoria: { type: "integer", example: 1 },
-                      nome: { type: "string", example: "Alimentação" },
-                      tipo_transacao: {
-                        type: "string",
-                        example: "ENTRADA OU SAIDA",
-                      },
-                      gasto_fixo: { type: "boolean", example: true },
-                      id_usuario: { type: "integer", example: 1 },
-                      cor: { type: "string", example: "#FF5733" },
-                      icone: { type: "string", example: "plus" },
+
+            }
+          }
+        }
+      },
+      responses: {
+        "201": {
+          description: "Usuario criado com sucesso",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: {
+                    type: "string",
+                    example: "Usuario criado com sucesso",
+                  },
+                },
+              },
+            },
+          },
+        },
+        "400": {
+          description: "Erro de validação dos dados do usuario",
+        },
+      },
+    },
+    get: {
+      tags: ["Paciente"],
+      summary: "Listar Pacientes",
+      description: "Endpoint para listar todos os Pacientes",
+      security: [
+        {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      ],
+      responses: {
+        "200": {
+          description: "Lista de pacientes",
+          content: {
+            "application/json": {
+              schema: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                      description: "ID do agendamento",
+                    },
+                    nome_usuario: {
+                      type: "string",
+                      description: "Nome do paciente",
+                    },
+                    data_de_nascimento: {
+                      type: "string",
+                      format: "date",
+                      description: "Data de nascimento do paciente",
+                    },
+                    responsavel: {
+                      type: "string",
+                      description: "Nome do responsável pelo paciente",
+                    },
+                    endereco: {
+                      type: "string",
+                      description: "Endereço do paciente",
+                    },
+                    telefone: {
+                      type: "string",
+                      description: "Telefone de contato do paciente",
                     },
                   },
                 },
               },
             },
           },
-          200: {
-            description: "Categoria listada com sucesso",
+        },
+        "401": {
+          description: "Não autorizado, token inválido ou ausente"
+        }
+      }
+    }
+    
+  },
+  '/Paciente/{id}': {
+    patch: {
+      tags: ['Paciente'],
+      summary: "Atualizar um usuário",
+      description: "Endpoint para atualizar os dados de um usuário específico",
+      parameters: [
+        {
+          name: "id",
+          in: "path",
+          required: true,
+          schema: {
+            type: "integer",
           },
-          400: {
-            description: "Erro ao listar subcategorias",
+          description: "ID do paciente a ser atualizado",
+        },
+      ],
+      requestBody: {
+        description: "Dados do paciente a serem atualizados",
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                nome_usuario: {
+                  type: "string",
+                  description: "Nome do paciente",
+                },
+                data_de_nascimento: {
+                  type: "string",
+                  format: "date",
+                  description: "Data de nascimento do paciente",
+                },
+                responsavel: {
+                  type: "string",
+                  description: "Nome do responsável pelo paciente",
+                },
+                endereco: {
+                  type: "string",
+                  description: "Endereço do paciente",
+                },
+                telefone: {
+                  type: "string",
+                  description: "Telefone de contato do paciente",
+                },
+              },
+            },
           },
-          500: {
-            description: "Erro interno do servidor",
+        },
+      },
+      responses:{
+        '200':{
+          description:"Paciente atualizado com sucesso"
+        },
+        '400':{
+          description:"Erro de validação dos dados do usuário"
+        }
+      }
+    },
+    delete: {
+      tags: ["Paciente"],
+      summary: "Deletar um paciente",
+      description: "Endpoint para deletar um paciente específico",
+      parameters: [
+        {
+          name: "id",
+          in: "path",
+          required: true,
+          schema: {
+            type: "integer",
+          },
+          description: "ID do usuário a ser deletado",
+        },
+      ],
+      responses:{
+        '204':{
+          description:"Paciente deletado com sucesso"
+        },
+        '404':{
+          description:"Paciente não encontrado"
+        }
+      }
+    }
+  },
+  "/Agenda": {
+    post: {
+      tags: ["Agenda"],
+      summary: "Criar um novo agendamento",
+      description: "Endpoint para criar um novo agendamento",
+      requestBody: {
+        description: "Dados do agendamento",
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              required: ["nome_Usuario", "patologia","data_de_nascimento","quantidade_de_secao", "id_usuario", "id_fisioterapeuta"],
+              properties: {
+                data: {
+                  type: "string",
+                  format: "date",
+                  description: "Data do agendamento",
+                },
+                nome_usuario: {
+                  type: "string",
+                  description: "Nome do paciente"
+                },
+                patologia: {
+                  type: "string",
+                  description: "Tipo de patologia do paciente",
+                },
+                data_de_nascimento: {
+                  type: "string",
+                  format: "date",
+                  description: "Data de nascimento do paciente",
+                },
+                quantidade_de_secao: {
+                  type: "integer",
+                  description: "Quantidade de seções do agendamento",
+                },
+                id_usuario: {
+                  type: "integer",
+                  description: "ID do usuário associado ao agendamento",
+                },
+                id_fisioterapeuta: {
+                  type: "integer",
+                  description: "ID do fisioterapeuta associado ao agendamento",
+                },
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        "201": {
+          description: "Agendamento criado com sucesso",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: {
+                    type: "string",
+                    example: "Agendamento criado com sucesso",
+                  },
+                },
+              },
+            },
+          },
+        },
+        "400": {
+          description: "Erro de validação dos dados do agendamento",
+        },
+      },
+    },
+    get: {
+      tags: ["Agenda"],
+      summary: "Listar agendamentos",
+      description: "Endpoint para listar todos os agendamentos",
+      security: [
+        {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      ],
+      responses: {
+        "200": {
+          description: "Lista de agendamentos",
+          content: {
+            "application/json": {
+              schema: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    nome_usuario: {
+                      type: "integer",
+                      description: "ID do agendamento",
+                    },
+                    data_de_nascimento: {
+                      type: "string",
+                      format: "date",
+                      description: "Data do agendamento",
+                    },
+                    patologia: {
+                      type: "string",
+                      format: "time",
+                      description: "tipo de patologia do paciente",
+                    },
+                    id_usuario: {
+                      type: "integer",
+                      description: "ID do usuário associado ao agendamento",
+                    },
+                    quantidade_de_secao: {
+                      type: "integer",
+                      description: "Quantidade de seções do agendamento",
+
+                    },
+                    id_fisioterapeuta: {
+                      type: "integer",
+                      description:
+                        "ID do fisioterapeuta associado ao agendamento",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        "401": {
+          description:
+            "Não autorizado, token inválido ou ausente"
+        }
+      }
+    }
+  },
+  "/Agenda/{id}": {
+    patch: {
+      tags: ["Agenda"],
+      summary: "Atualizar um agendamento",
+      description: "Endpoint para atualizar os dados de um agendamento específico",
+      parameters: [
+        {
+          name: "id",
+          in: "path",
+          required: true,
+          schema: {
+            type: "integer",
+          },
+          description: "ID do agendamento a ser atualizado",
+        },
+      ],
+      requestBody: {
+        description: "Dados do agendamento a serem atualizados",
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                data: {
+                  type: "string",
+                  format: "date",
+                  description: "Data do agendamento",
+                },
+                nome_usuario: {
+                  type: "string",
+                  description: "Nome do paciente"
+                },
+                patologia: {
+                  type: "string",
+                  description: "Tipo de patologia do paciente",
+                },
+                data_de_nascimento: {
+                  type: "string",
+                  format: "date",
+                  description: "Data de nascimento do paciente",
+                },
+                quantidade_de_secao:{
+                  type:"integer",
+                  description:"Quantidade de seções do agendamento"
+                },
+                id_usuario:{
+                  type:"integer",
+                  description:"ID do usuário associado ao agendamento"
+                },
+                id_fisioterapeuta:{
+                  type:"integer",
+                  description:"ID do fisioterapeuta associado ao agendamento"
+                }
+              },
+            },
+          },
+        },
+      },
+      responses:{
+        '200':{
+          description:"Agendamento atualizado com sucesso"
+        },
+        '400':{
+          description:"Erro de validação dos dados do agendamento"
+        }
+      }
+    },
+    delete: {
+      tags: ["Agenda"],
+      summary: "Deletar um agendamento",
+      description: "Endpoint para deletar um agendamento específico",
+      parameters: [
+        {
+          name: "id",
+          in: "path",
+          required: true,
+          schema: {
+            type: "integer",
+          },
+          description: "ID do agendamento a ser deletado",
+        },
+      ],
+      responses:{
+        '204':{
+          description:"Agendamento deletado com sucesso"
+        },
+        '404':{
+          description:"Agendamento não encontrado"
+        }
+      }
+    }
+    
+  },
+  "Fisioterapeuta": {
+    "post": {
+      tags: ["Fisioterapeuta"],
+      summary: "Criar um novo fisioterapeuta",
+      description: "Endpoint para criar um novo fisioterapeuta",
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                nome:{
+                  type: "string",
+                  description: "Nome do fisioterapeuta",
+                },
+                especialidade: {
+                  type: "string",
+                  description: "Especialidade do fisioterapeuta",
+                },
+                data_de_nascimento: {
+                  type: "string",
+                  format: "date",
+                  description: "Data de nascimento do fisioterapeuta",
+                },
+              }
+
+            }
+          }
+        },
+        responses: {
+          "201": {
+            description: "Fisioterapeuta criado com sucesso",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: {
+                      type: "string",
+                      example: "Fisioterapeuta criado com sucesso",
+                    },
+                  },
+                },
+              },
+            },
+          },
+          "400": {
+            description: "Erro de validação dos dados do fisioterapeuta",
           },
         },
       }
     },
-    '/subcategorias/{id_subcategoria}': {
-        put: {
-            tags: ['Subcategorias'],
-            summary: 'Atualizar subcategoria',
-            description: 'Rota para atualizar uma subcategoria',
-            security: [
-                {
-                    bearerAuth: []
-                }
-            ],
-            parameters: [
-                {
-                    name: 'id_subcategoria',
-                    in: 'path',
-                    required: true,
-                    description: 'ID da subcategoria a ser atualizada',
-                    schema: {
-                        type: 'integer'
-                    }
-                }
-            ],
-            requestBody: {
-                required: true,
-                content: {
-                    'application/json': {
-                        schema: {
-                            type: 'object',
-                            properties: {
-                                nome: { type: 'string', example: 'Alimentação' },
-                                id_categoria: { type: 'integer', example: 1 },
-                                gasto_fixo: { type: 'boolean', example: true },
-                                cor: { type: 'string', example: '#FF5733' },
-                                icone: { type: 'string', example: 'plus' }
-                            }
-                        }
-                    }
-                }
-            },
-            responses: {
-                200: {
-                    description: 'Subcategoria atualizada com sucesso'
-                },
-                400: {
-                    description: 'Erro ao atualizar subcategoria'
-                },
-                500: {
-                    description: 'Erro interno do servidor'
-                }
-            }
+    get:{
+      tags: ["Fisioterapeuta"],
+      summary: "Listar fisioterapeutas",
+      description: "Listar fisioterapeutas",
+      security: [
+        {
+          bearerAuth: []
         },
-        patch: {
-            tags: ['Subcategorias'],
-            summary: 'Atualizar subcategoria',
-            description: 'Rota para atualizar uma subcategoria',
-            security: [
-                {
-                    bearerAuth: []
-                }
-            ],
-            parameters: [
-                {
-                    name: 'id_subcategoria',
-                    in: 'path',
-                    required: true,
-                    description: 'ID da subcategoria a ser atualizada',
-                    schema: {
-                        type: 'integer'
-                    }
-                }
-            ],
-            requestBody: {
-                required: true,
-                content: {
-                    'application/json': {
-                        schema: {
-                            type: 'object',
-                            properties: {
-                                nome: { type: 'string', example: 'Alimentação' },
-                                id_categoria: { type: 'integer', example: 1 },
-                                gasto_fixo: { type: 'boolean', example: true },
-                                cor: { type: 'string', example: '#FF5733' },
-                                icone: { type: 'string', example: 'plus' }
-                            }
-                        }
-                    }
-                }
+      ],
+      responses: {
+        "200": {
+          description: "Lista de fisioterapeutas",
+          content: {
+            "application/json": {
+              schema: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                      description: "ID do fisioterapeuta",
+                    },
+                    nome: {
+                      type: "string",
+                      description: "Nome do fisioterapeuta",
+                    },
+                    especialidade: {
+                      type: "string",
+                      description: "Especialidade do fisioterapeuta",
+                    },
+                    data_de_nascimento: {
+                      type: "string",
+                      format: "date",
+                      description: "Data de nascimento do fisioterapeuta",
+                    },
+                  },
+                },
+              },
             },
-            responses: {
-                200: {
-                    description: 'Subcategoria atualizada com sucesso'
-                },
-                400: {
-                    description: 'Erro ao atualizar subcategoria'
-                },
-                500: {
-                    description: 'Erro interno do servidor'
-                }
-            }
+          },
+        },
+        "401": {
+          description:
+            "Não autorizado, token inválido ou ausente"
         }
+      }
     }
   },
-};
+  "/fisioterapeutas/{id}": {
+    patch: {
+      tags: ["Fisioterapeuta"],
+      summary: "Atualizar um fisioterapeuta",
+      description: "Endpoint para atualizar os dados de um fisioterapeuta específico",
+      parameters: [
+        {
+          name: "id",
+          in: "path",
+          required: true,
+          schema: {
+            type: "integer",
+          },
+          description: "ID do fisioterapeuta a ser atualizado",
+        },
+      ],
+      requestBody: {
+        description: "Dados do fisioterapeuta a serem atualizados",
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                nome:{
+                  type:"string",
+                  description:"Nome do fisioterapeuta"
+                },
+                especialidade:{
+                  type:"string",
+                  description:"Especialidade do fisioterapeuta"
+                },
+                data_de_nascimento:{
+                  type:"string",
+                  format:"date",
+                  description:"Data de nascimento do fisioterapeuta"
+                }
+              }
+            }
+          }
+        },
+      },
+      responses:{
+        '200':{
+          description:"Fisioterapeuta atualizado com sucesso"
+        },
+        '400':{
+          description:"Erro de validação dos dados do fisioterapeuta"
+        }
+      }
+    },
+    delete: {
+      tags: ["Fisioterapeuta"],
+      summary: "Deletar um fisioterapeuta",
+      description: "Endpoint para deletar um fisioterapeuta específico",
+      parameters: [
+        {
+          name: "id",
+          in: "path",
+          required: true,
+          schema: {
+            type: "integer",
+          },
+          description: "ID do fisioterapeuta a ser deletado",
+        },
+      ],
+      responses:{
+        '204':{
+          description:"Fisioterapeuta deletado com sucesso"
+        },
+        '404':{
+          description:"Fisioterapeuta não encontrado"
+        }
+      }
+    }
+  }
+
+  }
+  
+}
+
+
+
+
 
 const options = {
-  swaggerDefinition,
-  apis: [],
-};
+    swaggerDefinition,
+    apis: [] //
+}
 
-const swaggerSpec = SwaggerJSDoc(options);
+
+const swaggerSpec = swaggerJSDoc(options);
 export default swaggerSpec;
